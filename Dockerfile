@@ -3,9 +3,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Dotnet restore
-COPY ["Unifertil_API_Central.sln", "."]
+COPY ["CentralAPI.sln", "."]
 COPY ["Unifertil_API_Central/Unifertil_API_Central.csproj", "Unifertil_API_Central/"]
-RUN dotnet restore "Unifertil_API_Central.sln"
+RUN dotnet restore "CentralAPI.sln"
 
 # Font code
 COPY . .
