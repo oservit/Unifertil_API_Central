@@ -4,14 +4,16 @@ WORKDIR /src
 
 # Dotnet restore
 COPY ["CentralAPI.sln", "."]
+COPY ["API/CentralAPI.csproj", "API/"]
 COPY ["Application/Application.csproj", "Application/"]
-COPY ["CentralAPI/CentralAPI.csproj", "CentralAPI/"]
 COPY ["Core/Domain.csproj", "Core/"]
 COPY ["Crypto/Crypto.csproj", "Crypto/"]
 COPY ["DeployAutomatico/DeployAutomatico.csproj", "DeployAutomatico/"]
 COPY ["Libs/Libs.csproj", "Libs/"]
+COPY ["RemoreAPI/RemoteAPI.csproj", "RemoreAPI/"] 
 COPY ["Repository/Infrastructure.csproj", "Repository/"]
 COPY ["Service/Service.csproj", "Service/"]
+
 RUN dotnet restore "CentralAPI.sln"
 
 # Font code
