@@ -1,4 +1,4 @@
-﻿using Application.Features.Base;
+﻿using Application.Common;
 using Domain.Features.Products;
 
 namespace Application.Features.Products

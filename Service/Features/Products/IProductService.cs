@@ -1,4 +1,4 @@
-﻿using Service.Base;
+﻿using Service.Common;
 using Domain.Features.Products;
 
 namespace Service.Features.Products

@@ -1,7 +1,7 @@
 ﻿using API.Central.Controllers;
-using Application.Features.Base;
+using Application.Common;
 using AutoMapper;
-using Domain.Base;
+using Domain.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Central.Controllers

@@ -1,4 +1,4 @@
-﻿using Application.Features.Base;
+﻿using Application.Common;
 using AutoMapper;
 using Domain.Features.Products;
 using Domain.Settings;

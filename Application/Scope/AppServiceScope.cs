@@ -3,7 +3,7 @@ using Application.Services.Auth;
 using Application.Features.Clients;
 using Application.Features.Products;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Base;
+using Service.Common;
 
 namespace Application.Scope
 {

@@ -2,7 +2,7 @@
 using Infrastructure.Repositories.Clients;
 using Infrastructure.Services.Audit;
 using Infrastructure.Http;
-using Service.Base;
+using Service.Common;
 
 namespace Service.Features.Clients
 {

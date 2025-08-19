@@ -2,7 +2,7 @@
 using Infrastructure.Repositories.Products;
 using Infrastructure.Services.Audit;
 using Infrastructure.Http;
-using Service.Base;
+using Service.Common;
 
 namespace Service.Features.Products
 {

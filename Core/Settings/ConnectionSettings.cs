@@ -1,4 +1,4 @@
-﻿using Domain.Base.Enums;
+﻿using Domain.Common.Enums;
 using System.Text.Json.Serialization;
 
 namespace Domain.Settings;
