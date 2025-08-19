@@ -4,7 +4,14 @@ WORKDIR /src
 
 # Dotnet restore
 COPY ["CentralAPI.sln", "."]
-COPY ["Unifertil_API_Central/Unifertil_API_Central.csproj", "Unifertil_API_Central/"]
+COPY ["Application/Application.csproj", "Application/"]
+COPY ["CentralAPI/CentralAPI.csproj", "CentralAPI/"]
+COPY ["Core/Domain.csproj", "Core/"]
+COPY ["Crypto/Crypto.csproj", "Crypto/"]
+COPY ["DeployAutomatico/DeployAutomatico.csproj", "DeployAutomatico/"]
+COPY ["Libs/Libs.csproj", "Libs/"]
+COPY ["Repository/Infrastructure.csproj", "Repository/"]
+COPY ["Service/Service.csproj", "Service/"]
 RUN dotnet restore "CentralAPI.sln"
 
 # Font code
@@ -25,4 +32,4 @@ EXPOSE 5010
 COPY --from=build /app/publish .
 
 # Define the command that will be executed when the container starts.
-ENTRYPOINT ["dotnet", "Unifertil_API_Central.dll"]
+ENTRYPOINT ["dotnet", "CentralAPI.dll"]
