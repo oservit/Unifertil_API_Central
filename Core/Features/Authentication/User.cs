@@ -10,7 +10,7 @@ namespace Domain.Features.Authentication
         [Key]
         [Column("ID")]
         [Sequence("SEQ_USERS_ID")]
-        public override long? Id { get; set; }
+        public new long? Id { get; set; }
 
         [Column("USERNAME")]
         [MaxLength(100)]

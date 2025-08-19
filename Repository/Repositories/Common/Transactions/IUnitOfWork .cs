@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Data.Oracle;
 
-namespace Infrastructure.Repositories.Base.Transactions
+namespace Infrastructure.Repositories.Common.Transactions
 {
     public interface IUnitOfWork : IDisposable
     {

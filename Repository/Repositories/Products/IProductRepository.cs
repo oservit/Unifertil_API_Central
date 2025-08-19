@@ -1,5 +1,5 @@
 ﻿using Domain.Features.Products;
-using Infrastructure.Repositories.Base;
+using Infrastructure.Repositories.Common;
 
 namespace Infrastructure.Repositories.Products
 {

@@ -1,5 +1,5 @@
 ﻿using Infrastructure.Data;
-using Infrastructure.Repositories.Base;
+using Infrastructure.Repositories.Common;
 using Domain.Features.Products;
 
 namespace Infrastructure.Repositories.Products

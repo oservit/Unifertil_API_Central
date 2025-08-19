@@ -1,5 +1,5 @@
 ﻿using Domain.Common;
-using Infrastructure.Repositories.Base;
+using Infrastructure.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 
 public class RepositoryBase<T> : SelectRepository<T>, IRepositoryBase<T> where T : class, IEntityBase
@@ -18,21 +18,7 @@ public class RepositoryBase<T> : SelectRepository<T>, IRepositoryBase<T> where T
     {
         if (entities == null) throw new ArgumentNullException(nameof(entities));
 
-        foreach (var entity in entities)
-        {
-            _context.Set<T>().Add(entity);
-        }
-
-        return await _context.SaveChangesAsync();
-    }
-
-    public virtual async Task<int> SaveOrUpdate(T entity)
-    {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-
-        var entry = _context.Entry(entity);
-
-        _context.Update(entity);
+        _context.Set<T>().AddRange(entities);
         return await _context.SaveChangesAsync();
     }
 
@@ -40,12 +26,16 @@ public class RepositoryBase<T> : SelectRepository<T>, IRepositoryBase<T> where T
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-        var entry = _context.Entry(entity);
+        var tracked = await _context.Set<T>().FindAsync(entity.Id);
 
-        if (entry.State == EntityState.Detached)
+        if (tracked == null)
+        {
             _context.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+        }
+        else
+            _context.Entry(tracked).CurrentValues.SetValues(entity);
 
-        _context.Update(entity);
         return await _context.SaveChangesAsync();
     }
 
@@ -84,25 +74,13 @@ public class RepositoryBase<T> : SelectRepository<T>, IRepositoryBase<T> where T
         return await _context.SaveChangesAsync();
     }
 
-    /// <summary>
-    /// Remove uma entidade do contexto.
-    /// </summary>
-    /// <param name="id">O ID da entidade a ser removida.</param>
     public virtual async Task<int> Delete(long id)
     {
-        try
-        {
-            var entity = await _context.Set<T>().FindAsync(id);
-            if (entity == null)
-                throw new InvalidOperationException("Entidade não encontrada.");
+        var entity = await _context.Set<T>().FindAsync(id);
+        if (entity == null)
+            throw new InvalidOperationException("Entidade não encontrada.");
 
-            _context.Set<T>().Remove(entity);
-
-            return await _context.SaveChangesAsync();
-        }
-        catch
-        {
-            throw;
-        }
+        _context.Set<T>().Remove(entity);
+        return await _context.SaveChangesAsync();
     }
 }

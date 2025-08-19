@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Infrastructure.Repositories.Base.Transactions
+namespace Infrastructure.Repositories.Common.Transactions
 {
     /// <summary>
     /// Classe para gerenciar o escopo de uma transação utilizando UnitOfWork.

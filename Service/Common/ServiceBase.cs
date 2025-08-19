@@ -1,6 +1,6 @@
 ﻿using Domain;
 using Domain.Common;
-using Infrastructure.Repositories.Base;
+using Infrastructure.Repositories.Common;
 using Infrastructure.Services.Audit;
 using Infrastructure.Http;
 
@@ -39,5 +39,22 @@ namespace Service.Common
         {
             return await _repository.Delete(id);
         }
+
+        public virtual async Task<int> SaveOrUpdate(T obj)
+        {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+
+            if (obj.Id.HasValue && _repository.Exists(obj.Id.Value))
+            {
+                _auditService.SetModified(obj);
+                return await _repository.Update(obj);
+            }
+            else
+            {
+                _auditService.SetCreated(obj);
+                return await _repository.Save(obj);
+            }
+        }
+
     }
 }

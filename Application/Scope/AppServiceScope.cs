@@ -2,6 +2,7 @@
 using Application.Services.Auth;
 using Application.Features.Clients;
 using Application.Features.Products;
+using Application.Features.Sync.Products;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Common;
 
@@ -19,6 +20,7 @@ namespace Application.Scope
             services.AddScoped<IAuthenticationAppService, AuthenticationAppService>();
 
             services.AddScoped<IProductAppService, ProductAppService>();
+            services.AddScoped<IProductSyncAppService, ProductSyncAppService>();
             services.AddScoped<ITokenService, TokenService>();
         }
     }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using Infrastructure.Data.Oracle;
 
-namespace Infrastructure.Repositories.Base.Transactions
+namespace Infrastructure.Repositories.Common.Transactions
 {
     public class UnitOfWork : IUnitOfWork
     {

@@ -7,8 +7,9 @@ namespace Application.Features.Products.Mapping
     {
         public ProductMappingProfile()
         {
+            CreateMap<CreateProductModel, Product>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
             CreateMap<ProductViewModel, Product>();
-            CreateMap<CreateProductModel, Product>();
             CreateMap<UpdateProductModel, Product>();
             CreateMap<Product, ProductViewModel>();
         }

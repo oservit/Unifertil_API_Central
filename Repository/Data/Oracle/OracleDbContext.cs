@@ -2,7 +2,7 @@
 using Domain.Common.Enums;
 using Domain.Settings;
 using Infrastructure.Data.Common;
-using Infrastructure.Repositories.Base;
+using Infrastructure.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;

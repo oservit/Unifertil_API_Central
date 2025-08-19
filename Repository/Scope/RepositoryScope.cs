@@ -3,7 +3,7 @@ using Infrastructure.Data.MySql;
 using Infrastructure.Data.Oracle;
 using Infrastructure.Data.SqlServer;
 using Infrastructure.Repositories.Authentication;
-using Infrastructure.Repositories.Base.Transactions;
+using Infrastructure.Repositories.Common.Transactions;
 using Infrastructure.Repositories.Clients;
 using Infrastructure.Repositories.Products;
 using Microsoft.Extensions.DependencyInjection;
