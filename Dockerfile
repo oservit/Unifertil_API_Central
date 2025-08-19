@@ -18,14 +18,14 @@ RUN dotnet restore "CentralAPI.sln"
 
 # Font code
 COPY . .
-WORKDIR "/src/Unifertil_API_Central"
+#WORKDIR "/src/Unifertil_API_Central"
 
 # Publish api
 RUN dotnet publish "API/CentralAPI.csproj" -c Release -o /app/publish --no-restore
 
 # Stage 2 - Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
-#WORKDIR /app
+WORKDIR /app
 
 # Expose API port
 EXPOSE 5010
