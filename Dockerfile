@@ -21,7 +21,7 @@ COPY . .
 WORKDIR "/src/Unifertil_API_Central"
 
 # Publish api
-RUN dotnet publish "Unifertil_API_Central.csproj" -c Release -o /app/publish --no-restore
+RUN dotnet publish "API/CentralAPI.csproj" -c Release -o /app/publish --no-restore
 
 # Stage 2 - Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
