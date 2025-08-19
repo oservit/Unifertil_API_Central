@@ -14,6 +14,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+
+                sh 'ls -R'
+                
                 echo 'Baixando o código do repositório...'
                 // Garante que o workspace esteja limpo antes de começar
                 cleanWs() 
