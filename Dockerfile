@@ -25,7 +25,6 @@ RUN dotnet publish "API/CentralAPI.csproj" -c Release -o /app/publish --no-resto
 
 # Stage 2 - Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
-WORKDIR /app
 
 # Expose API port
 EXPOSE 5010
