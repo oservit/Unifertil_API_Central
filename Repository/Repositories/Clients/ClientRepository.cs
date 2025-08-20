@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Data;
 using Domain.Features.Clients;
+using Infrastructure.Repositories.Common;
 
 namespace Infrastructure.Repositories.Clients
 {

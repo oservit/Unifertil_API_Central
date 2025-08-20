@@ -20,7 +20,7 @@ namespace Application.Features.Sync.Core
             _mapper = mapper;
         }
 
-        public virtual async Task<DataResult> Sync(TModel model)
+        public virtual async Task<DataResult> SyncLocal(TModel model)
         {
             try
             {
