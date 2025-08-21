@@ -2,6 +2,6 @@
 {
     public interface ITokenService
     {
-        Task<string> GetTokenAsync(string remoteName = null);
+        Task<string> GetTokenAsync(RemoteCredentials credentials);
     }
 }
