@@ -3,9 +3,10 @@ using Infrastructure.Data.MySql;
 using Infrastructure.Data.Oracle;
 using Infrastructure.Data.SqlServer;
 using Infrastructure.Repositories.Authentication;
-using Infrastructure.Repositories.Common.Transactions;
 using Infrastructure.Repositories.Clients;
+using Infrastructure.Repositories.Common.Transactions;
 using Infrastructure.Repositories.Products;
+using Infrastructure.Repositories.Sync;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Scope
@@ -35,6 +36,7 @@ namespace Infrastructure.Scope
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepositoryRepository, ProductRepository>();
+            services.AddScoped<ISyncLogRepository, SyncLogRepository>();
         }
 
         private static void RegisterUnitsOfWork(IServiceCollection services)

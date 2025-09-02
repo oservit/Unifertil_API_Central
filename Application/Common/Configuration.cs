@@ -1,7 +1,6 @@
 ﻿using Application.Scope;
 using Infrastructure.Scope;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Scope;
 
 namespace Application.Common
 {

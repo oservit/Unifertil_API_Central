@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Libs;
+﻿using Libs;
 using Libs.Common;
 using Libs.Exceptions;
 using Service.Common;

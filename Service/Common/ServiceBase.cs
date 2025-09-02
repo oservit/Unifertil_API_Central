@@ -1,8 +1,8 @@
 ﻿using Domain;
 using Domain.Common;
+using Infrastructure.Http;
 using Infrastructure.Repositories.Common;
 using Infrastructure.Services.Audit;
-using Infrastructure.Http;
 
 namespace Service.Common
 {
@@ -15,7 +15,7 @@ namespace Service.Common
         public ServiceBase(IRepositoryBase<T> repository, IHttpUserAccessor httpUser, IAuditService auditService) : base(repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _httpUser= httpUser ?? throw new ArgumentNullException(nameof(httpUser));
+            _httpUser = httpUser ?? throw new ArgumentNullException(nameof(httpUser));
             _auditService = auditService ?? throw new ArgumentNullException(nameof(auditService));
         }
 

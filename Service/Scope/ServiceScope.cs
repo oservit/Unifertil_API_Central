@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Service.Features.Authentication;
-using Service.Features.Products;
 using Service.Features.Clients;
+using Service.Features.Products;
+using Service.Features.Sync;
 
 namespace Service.Scope
 {
@@ -17,6 +18,7 @@ namespace Service.Scope
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ISyncLogService, SyncLogService>();
         }
     }
 }

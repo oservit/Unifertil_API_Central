@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Domain;
 using Domain.Common;
 using Domain.Settings;
 using Libs.Common;
@@ -21,7 +20,7 @@ namespace Application.Common
             _settings = settings.Value;
         }
 
-        public virtual async Task<DataResult> Save(object model)
+        public virtual async Task<DataResult> Save(ICreateViewModel model)
         {
             try
             {
@@ -55,8 +54,8 @@ namespace Application.Common
                 if (model == null)
                     throw new Exception("Valores não repassados ao controlador!");
 
-                if(model.Id != id)
-                    throw new Exception("Id diferente da model!");
+                if (model.Id != id)
+                    throw new Exception("Identificador do registro difere do identificador do model");
 
                 var entity = _mapper.Map<T>(model);
 
