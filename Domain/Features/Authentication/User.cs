@@ -1,30 +1,42 @@
 ﻿using Domain.Common;
+using Domain.Features.Authentication.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Features.Authentication
 {
-    [Table("USERS")]
-    public class User: EntityBase
+    [Table("API_USERS")]
+    public class User : EntityBase
     {
         [Key]
         [Column("ID")]
-        [Sequence("SEQ_USERS_ID")]
-        public new long? Id { get; set; }
+        public override long? Id { get; set; }
+
+        [Column("TYPE_ID")]
+        [Required]
+        public UserTypeEnum TypeId { get; set; }
 
         [Column("USERNAME")]
+        [Required]
         [MaxLength(100)]
-        public string Username { get; set; }
-
-        [Column("EMAIL")]
-        [MaxLength(255)]
-        public string Email { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Column("PASSWORD")]
-        public string Password { get; set; }
+        [Required]
+        [MaxLength(500)]
+        public string Password { get; set; } = string.Empty;
+
+        [Column("DESCRIPTION")]
+        [MaxLength(200)]
+        public string? Description { get; set; }
 
         [Column("IS_ACTIVE")]
-        [BoolAsInt]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
+
+        [Column("CREATED_AT")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [Column("UPDATED_AT")]
+        public DateTime? UpdatedAt { get; set; }
     }
 }

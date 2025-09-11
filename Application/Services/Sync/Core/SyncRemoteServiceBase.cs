@@ -6,8 +6,6 @@ using Domain.Features.Sync;
 using Domain.Features.Sync.Enums;
 using Infrastructure.Http;
 using Libs.Common;
-using Libs.Exceptions;
-using Microsoft.Extensions.Configuration;
 using Service.Features.Sync;
 using System.Text.Json;
 
@@ -16,18 +14,21 @@ namespace Application.Services.Sync.Core
     public abstract class SyncRemoteServiceBase<TModel> : AuthenticatedAppService, ISyncRemoteServiceBase<TModel>
         where TModel : class, IViewModelBase
     {
-        private readonly IConfiguration _config;
         private readonly ISyncLogService _logService;
+        private readonly ISyncHashService _hashService;
+        private readonly ISyncViewRouteUserService _routeService;
 
         protected SyncRemoteServiceBase(
             IApiClient apiClient,
             ITokenService tokenService,
-            IConfiguration config,
-            ISyncLogService logService)
-            : base(apiClient, tokenService, config)
+            ISyncLogService logService,
+            ISyncHashService hashService,
+            ISyncViewRouteUserService routeService)
+            : base(apiClient, tokenService)
         {
-            _config = config; ;
             _logService = logService;
+            _hashService = hashService;
+            _routeService = routeService;
         }
 
         protected abstract string GetRoute();
@@ -40,7 +41,40 @@ namespace Application.Services.Sync.Core
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
-            var syncLog = new SyncLog
+            var syncLog = BuildSyncLog(message);
+            var syncHash = BuildSyncHash(message);
+
+            try
+            {
+                var credentials = await GetRemoteCredentials(message.Info.ReceiverId);
+                var url = BuildSyncUrl(credentials.BaseUrl);
+
+                var result = await PostAsync<DataResult>(url, message, credentials);
+
+                if (message.Info.Caller.Equals(SyncCaller.Integrator))
+                {
+                    syncLog.Status = StatusEnum.Success;
+                    await _logService.Save(syncLog);
+                    await _hashService.SaveOrUpdate(syncHash);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                if (message.Info.Caller.Equals(SyncCaller.Integrator))
+                {
+                    syncLog.Status = StatusEnum.Error;
+                    syncLog.Message = ex.Message;
+
+                    TrySaveLog(syncLog);
+                }
+                throw;
+            }
+        }
+
+        private SyncLog BuildSyncLog(SyncMessage<TModel> message) =>
+            new SyncLog
             {
                 RecordId = message.Payload.Id.Value,
                 LogDateTime = DateTime.Now,
@@ -50,48 +84,42 @@ namespace Application.Services.Sync.Core
                 Operation = (OperationEnum)message.Info.OperationId
             };
 
+        private SyncHash BuildSyncHash(SyncMessage<TModel> message) =>
+            new SyncHash
+            {
+                HashValue = message.Info.Hash,
+                EntityId = message.Info.EntityId,
+                RecordId = message.Payload.Id.Value,
+                OperationId = message.Info.OperationId
+            };
+
+        private async Task<RemoteCredentials> GetRemoteCredentials(int receiverId)
+        {
             try
             {
-                var remote = _config.GetSection("Remotes")
-                                    .GetChildren()
-                                    .Select(r => new
-                                    {
-                                        Id = int.Parse(r["Id"]!),
-                                        Url = r["Url"]?.TrimEnd('/'),
-                                        User = r["User"],
-                                        Password = r["Password"]
-                                    })
-                                    .FirstOrDefault(r => r.Id == message.Info.ReceiverId);
+                var route = await _routeService.Get(x => x.TargetNodeId == receiverId && x.RouteIsActive && x.UserIsActive);
 
-                if (remote == null || string.IsNullOrEmpty(remote.Url))
-                    throw new InvalidOperationException($"Remote com Id {message.Info.ReceiverId} não encontrado ou sem URL");
+                if (route == null)
+                    throw new Exception("Nenhuma Configuração de Rota Válida Encontrada");
 
-                var url = $"{remote.Url}/{GetRoute()}/Sync/Receive";
-                var credentiais = new RemoteCredentials(remote.User, remote.Password, remote.Url);
+                var info = new RemoteCredentials(route.UserName, "1234", route.TargetNodeUrl);
 
-                var result = await PostAsync<DataResult>(url, message, credentiais);
-
-                syncLog.Status = StatusEnum.Success;
-                syncLog.Message = null;
-
-                await _logService.Save(syncLog);
-
-                return result;
+                return info;
             }
-            catch (Exception ex)
-            {
-                syncLog.Status = StatusEnum.Error;
-                syncLog.Message = ex.Message;
 
-                try
-                {
-                    await _logService.Save(syncLog);
-                }
-                catch
-                {
-                }
+            catch
+            {
                 throw;
             }
         }
+
+        private string BuildSyncUrl(string remoteUrl) => $"{remoteUrl}/{GetRoute()}/Sync/Receive";
+
+        private async void TrySaveLog(SyncLog log)
+        {
+            try { await _logService.Save(log); }
+            catch { /* swallow exception */ }
+        }
+
     }
 }

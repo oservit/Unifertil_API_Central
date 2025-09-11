@@ -5,12 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Features.Sync
 {
-    [Table("SYNC_LOG_AUX")]
+    [Table("SYNC_LOGS")]
     public class SyncLog : EntityBase
     {
         [Key]
-        [Column("LOG_ID")]
+        [Column("ID")]
         public override long? Id { get; set; }
+
+        [Column("BATCH_ID")]
+        public long? BatchId { get; set; }
 
         [Column("ENTITY_ID")]
         [Required]
@@ -27,6 +30,14 @@ namespace Domain.Features.Sync
         [Column("OPERATION_ID")]
         [Required]
         public OperationEnum Operation { get; set; }
+
+        [Column("API_URL")]
+        [Required]
+        public string? ApiUrl { get; set; }
+
+        [Column("API_USERNAME")]
+        [Required]
+        public string? ApiUserName { get; set; }
 
         [Column("MESSAGE")]
         [MaxLength(4000)]
