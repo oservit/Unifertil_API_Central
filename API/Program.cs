@@ -142,10 +142,18 @@ public class Program
 
     private static void PrintConfiguration(WebApplicationBuilder builder)
     {
-        var settings = builder.Configuration.GetSection("").Get<AppSettings>();
+        AppSettings settings = null;
+        try
+        {
+            settings = builder.Configuration.Get<AppSettings>();
+        }
+        catch
+        {
+            Console.WriteLine("Não foi possível carregar AppSettings do arquivo de configuração.");
+        }
 
         Console.WriteLine("CORS AllowedOrigins:");
-        if (settings.Cors?.AllowedOrigins != null && settings.Cors.AllowedOrigins.Count > 0)
+        if (settings?.Cors?.AllowedOrigins != null && settings.Cors.AllowedOrigins.Count > 0)
         {
             foreach (var origin in settings.Cors.AllowedOrigins)
             {
@@ -157,8 +165,7 @@ public class Program
             Console.WriteLine("  - Nenhuma origem CORS configurada.");
         }
 
-        var https = settings.Kestrel?.Endpoints?.Https;
-
+        var https = settings?.Kestrel?.Endpoints?.Https;
         Console.WriteLine("Kestrel Configurações:");
 
         if (!string.IsNullOrEmpty(https?.Url))
@@ -171,12 +178,17 @@ public class Program
                 Console.WriteLine("    - Certificado:");
                 Console.WriteLine($"      - Caminho: {https.Certificate.Path}");
             }
+            else
+            {
+                Console.WriteLine("    - Nenhum certificado configurado.");
+            }
         }
         else
         {
             Console.WriteLine("  - Nenhuma configuração HTTPS encontrada.");
         }
     }
+
 
     private static void ConfigureServices(WebApplicationBuilder builder)
     {
