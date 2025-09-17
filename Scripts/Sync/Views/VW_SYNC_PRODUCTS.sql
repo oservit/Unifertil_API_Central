@@ -10,8 +10,9 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "SYSTEM"."VW_SYNC_PRODUCTS"
     UNIT_MEASURE,
     MANUFACTURER,
     CREATED_AT,
-    OPERACAO,
-    HASH
+    OPERATION_ID,
+    HASH_VALUE,
+    ENTITY_ID
 ) AS
 SELECT   
             tbl.ID,
@@ -23,8 +24,9 @@ SELECT
             tbl.UNIT_OF_MEASURE,
             tbl.MANUFACTURER,
             tbl.CREATED_AT,
-            1 AS OPERATION,
-            sync_pkg.hash_product(tbl.ID, tbl.NAME) AS HASH_VALUE
+            1 AS OPERATION_ID,
+            sync_pkg.hash_product(tbl.ID, tbl.NAME) AS HASH_VALUE,
+            1 AS ENTITY_ID
          FROM SYSTEM.products      tbl
     LEFT JOIN SYSTEM.sync_hashes   shs ON ( tbl.id = shs.RECORD_ID AND shs.ENTITY_ID = 1)
       WHERE shs.HASH_VALUE IS NULL
@@ -41,8 +43,9 @@ SELECT
             tbl.UNIT_OF_MEASURE,
             tbl.MANUFACTURER,
             tbl.CREATED_AT,
-            2 AS OPERATION,
-            sync_pkg.hash_product(tbl.ID, tbl.NAME) AS HASH_VALUE
+            2 AS OPERATION_ID,
+            sync_pkg.hash_product(tbl.ID, tbl.NAME) AS HASH_VALUE,
+            1 AS ENTITY_ID
          FROM SYSTEM.products      tbl
          JOIN SYSTEM.sync_hashes   shs ON ( tbl.id = shs.RECORD_ID AND shs.ENTITY_ID = 1)
       WHERE shs.HASH_VALUE <> sync_pkg.hash_product(tbl.ID, tbl.NAME)
@@ -59,8 +62,9 @@ SELECT
             tbl.UNIT_OF_MEASURE,
             tbl.MANUFACTURER,
             tbl.CREATED_AT,
-            3 AS OPERATION,
-            sync_pkg.hash_product(tbl.ID, tbl.NAME) AS HASH_VALUE
+            3 AS OPERATION_ID,
+            sync_pkg.hash_product(tbl.ID, tbl.NAME) AS HASH_VALUE,
+            1 AS ENTITY_ID
          FROM SYSTEM.sync_hashes   shs
     LEFT JOIN SYSTEM.products      tbl ON ( tbl.id = shs.RECORD_ID AND shs.ENTITY_ID = 1)
       WHERE shs.operation_id <> 3
