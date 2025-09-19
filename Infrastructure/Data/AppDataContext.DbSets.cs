@@ -15,6 +15,9 @@ namespace Infrastructure.Data
         public required DbSet<SyncBatch> SyncBatchs { get; set; }
         public required DbSet<SyncNode> SyncNodes { get; set; }
         public required DbSet<SyncRoute> SyncRoutes { get; set; }
-        public required DbSet<SyncViewRouteUser> SyncViewRoutesUsers { get; set; }
+        public required DbSet<SyncRouteUserView> SyncViewRoutesUsers { get; set; }
+        public required DbSet<SyncScheduledEvent> ScheduledEvents{ get; set; }
+
+        
     }
 }

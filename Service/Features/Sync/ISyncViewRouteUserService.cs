@@ -3,7 +3,7 @@ using Service.Common;
 
 namespace Service.Features.Sync
 {
-    public interface ISyncViewRouteUserService : ISelectService<SyncViewRouteUser>
+    public interface ISyncViewRouteUserService : ISelectService<SyncRouteUserView>
     {
     }
 }

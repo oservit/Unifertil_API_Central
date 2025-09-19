@@ -10,9 +10,10 @@ CREATE OR REPLACE NONEDITIONABLE PACKAGE BODY sync_pkg AS
         -- Seleciona dados do banco para sender/receiver
         SELECT 
             snt.url,
+            snt.auth_endpoint,
             u.username,
             u.password
-          INTO v_api_info.url_base, v_api_info.username, v_api_info.password
+          INTO v_api_info.url_base, v_api_info.auth_endpoint, v_api_info.username, v_api_info.password
           FROM sync_routes r
           INNER JOIN sync_nodes snt ON r.target_node_id = snt.id
           INNER JOIN api_users u  ON r.user_id = u.id
@@ -42,7 +43,7 @@ CREATE OR REPLACE NONEDITIONABLE PACKAGE BODY sync_pkg AS
         payload := '{"username":"' || pi_api_info.username || '","password":"' || pi_api_info.password || '"}';
         payload_raw := UTL_RAW.cast_to_raw(payload);
     
-        req := UTL_HTTP.begin_request(pi_api_info.url_base || '/Auth/GetToken', 'POST', 'HTTP/1.1');
+        req := UTL_HTTP.begin_request(pi_api_info.url_base || pi_api_info.auth_endpoint, 'POST', 'HTTP/1.1');
         UTL_HTTP.set_header(req, 'Content-Type', 'application/json; charset=UTF-8');
         UTL_HTTP.set_header(req, 'Content-Length', TO_CHAR(UTL_RAW.length(payload_raw)));
     
@@ -89,8 +90,7 @@ CREATE OR REPLACE NONEDITIONABLE PACKAGE BODY sync_pkg AS
         pi_receiver_id  IN NUMBER DEFAULT 2,
         pi_hash         IN VARCHAR2,
         pi_endpoint     IN VARCHAR2,
-        pi_api_info     IN t_api_info,
-        pi_use_auth     IN BOOLEAN DEFAULT TRUE
+        pi_api_info     IN t_api_info
     ) IS
         req            UTL_HTTP.req;
         resp           UTL_HTTP.resp;
@@ -127,7 +127,7 @@ CREATE OR REPLACE NONEDITIONABLE PACKAGE BODY sync_pkg AS
         UTL_HTTP.set_header(req, 'Content-Type', 'application/json; charset=UTF-8');
         UTL_HTTP.set_header(req, 'Content-Length', TO_CHAR(UTL_RAW.length(payload_bytes)));
 
-        IF pi_use_auth THEN
+        IF pi_api_info.auth_endpoint IS NOT NULL THEN
             BEGIN
                 get_auth_token(v_token, pi_api_info);
                 UTL_HTTP.set_header(req, 'Authorization', 'Bearer ' || v_token);
@@ -164,10 +164,30 @@ CREATE OR REPLACE NONEDITIONABLE PACKAGE BODY sync_pkg AS
         END;
 
         IF v_success = 'false' THEN
+            -- Insere no log
             INSERT INTO sync_logs(
                 entity_id, record_id, status_id, operation_id, api_url, api_username, message, log_datetime, payload, hash_value
             ) VALUES (
-                pi_entity_id, pi_record_id, 2, pi_operation_id, pi_api_info.url_base || pi_endpoint, pi_api_info.username, SUBSTR(v_message,1,4000), SYSTIMESTAMP, v_payload_json, pi_hash
+                pi_entity_id, pi_record_id, 2, pi_operation_id, pi_api_info.url_base || pi_endpoint,
+                pi_api_info.username, SUBSTR(v_message,1,4000), SYSTIMESTAMP, v_payload_json, pi_hash
+            );
+        
+            -- Insere no agendamento
+            INSERT INTO sync_scheduled_events(
+                entity_id, record_id, operation_id, status_id,
+                payload, hash_value,
+                service_url,
+                auth_url,
+                auth_username,
+                auth_password
+            ) VALUES (
+                pi_entity_id, pi_record_id, pi_operation_id, 3,
+                v_payload_json, pi_hash,
+                pi_api_info.url_base || pi_endpoint,
+                pi_api_info.url_base || pi_api_info.auth_endpoint,
+                pi_api_info.username,
+                pi_api_info.password    
+                
             );
         ELSE
 
@@ -190,6 +210,7 @@ CREATE OR REPLACE NONEDITIONABLE PACKAGE BODY sync_pkg AS
             ) VALUES (
                 pi_entity_id, pi_record_id, 1, pi_operation_id, pi_api_info.url_base || pi_endpoint, pi_api_info.username, NULL, SYSTIMESTAMP, v_payload_json, pi_hash
             );
+            
         END IF;
 
     EXCEPTION
@@ -199,6 +220,22 @@ CREATE OR REPLACE NONEDITIONABLE PACKAGE BODY sync_pkg AS
                 entity_id, record_id, status_id, operation_id, api_url, api_username, message, log_datetime, payload, hash_value
             ) VALUES (
                 pi_entity_id, pi_record_id, 2, pi_operation_id, pi_api_info.url_base || pi_endpoint, pi_api_info.username, log_msg, SYSTIMESTAMP, v_payload_json, pi_hash
+            );
+            -- Insere no agendamento
+            INSERT INTO sync_scheduled_events(
+                entity_id, record_id, operation_id, status_id,           
+                payload, hash_value,
+                service_url,
+                auth_url,
+                auth_username,
+                auth_password
+            ) VALUES (
+                pi_entity_id, pi_record_id, pi_operation_id, 3,
+                v_payload_json, pi_hash,
+                pi_api_info.url_base || pi_endpoint,
+                pi_api_info.url_base || pi_api_info.auth_endpoint,
+                pi_api_info.username,
+                pi_api_info.password          
             );
     END send_to_api;
 

@@ -24,6 +24,7 @@ namespace Service.Scope
             services.AddScoped<ISyncRouteService, SyncRouteService>();
             services.AddScoped<ISyncNodeService, SyncNodeService>();
             services.AddScoped<ISyncViewRouteUserService, SyncViewRouteUserService>();
+            services.AddScoped<ISyncScheduledEventService, SyncScheduledEventService>();
         }
     }
 }

@@ -20,12 +20,12 @@ namespace Service.Features.Sync
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            var existing = await _hashRepository.Get(x => x.RecordId == obj.RecordId && x.EntityId == obj.EntityId);
+            var existing = await _hashRepository.Get(x => x.RecordId == obj.RecordId && x.Entity == obj.Entity);
 
             if (existing != null)
             {
                 existing.HashValue = obj.HashValue;
-                existing.OperationId = obj.OperationId;
+                existing.Operation = obj.Operation;
                 existing.OperationDate = obj.OperationDate;
 
                 _auditService.SetModified(existing);

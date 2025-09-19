@@ -3,7 +3,7 @@ using Infrastructure.Repositories.Common;
 
 namespace Infrastructure.Repositories.Sync
 {
-    public interface ISyncViewRouteUserRepository : ISelectRepository<SyncViewRouteUser>
+    public interface ISyncViewRouteUserRepository : ISelectRepository<SyncRouteUserView>
     {
     }
 }

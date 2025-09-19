@@ -2,9 +2,9 @@
 -- NODES
 -- ============================================
 
-INSERT INTO sync_nodes (name, url, type_id) VALUES ('Central',  'http://127.0.0.1:50010/api', 1);
-INSERT INTO sync_nodes (name, url, type_id) VALUES ('Filial01', 'http://127.0.0.1:50020/api', 2);
-INSERT INTO sync_nodes (name, url, type_id) VALUES ('Filial02', 'http://127.0.0.1:50030/api', 2);
+INSERT INTO sync_nodes (name, url, auth_endpoint, type_id) VALUES ('Central',  'http://127.0.0.1:50010/api', '/Auth/GetToken', 1);
+INSERT INTO sync_nodes (name, url, auth_endpoint, type_id) VALUES ('Filial01', 'http://127.0.0.1:50020/api', '/Auth/GetToken', 2);
+INSERT INTO sync_nodes (name, url, auth_endpoint, type_id) VALUES ('Filial02', 'http://127.0.0.1:50030/api', '/Auth/GetToken', 2);
 
 -- ============================================
 -- USER TYPES

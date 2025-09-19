@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Features.Sync.Views
 {
-    [Table("SYNC_VIEW_ROUTES_USERS")]
-    public class SyncViewRouteUser : EntityBase
+    [Table("SYNC_ROUTES_USERS_VIEW")]
+    public class SyncRouteUserView : EntityBase
     {
         [Key]
         [Column("ROUTE_ID")]

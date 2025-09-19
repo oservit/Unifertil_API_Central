@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Domain.Features.Sync.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,7 +19,7 @@ namespace Domain.Features.Sync
 
         [Column("ENTITY_ID")]
         [Required]
-        public int EntityId { get; set; }
+        public EntityEnum Entity { get; set; }
 
         [Column("RECORD_ID")]
         [Required]
@@ -26,7 +27,7 @@ namespace Domain.Features.Sync
 
         [Column("OPERATION_ID")]
         [Required]
-        public long OperationId { get; set; }
+        public OperationEnum Operation { get; set; }
 
 
     [Column("OPERATION_DATE")]

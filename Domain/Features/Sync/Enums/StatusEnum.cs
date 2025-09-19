@@ -13,5 +13,7 @@ namespace Domain.Features.Sync.Enums
         Success = 1,
         [Description("Erro")]
         Error = 2,
+        [Description("Não Processado")]
+        Pending = 3,
     }
 }

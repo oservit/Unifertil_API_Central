@@ -44,9 +44,9 @@ namespace Application.Features.Sync.Core
             var syncHash = new SyncHash
             {
                 HashValue = message.Info.Hash,
-                EntityId = message.Info.EntityId,
+                Entity = (EntityEnum)message.Info.EntityId,
                 RecordId = message.Payload.Id.Value,
-                OperationId = message.Info.OperationId
+                Operation = (OperationEnum)message.Info.OperationId
             };
 
             try
@@ -66,7 +66,7 @@ namespace Application.Features.Sync.Core
                 syncLog.Status = StatusEnum.Success;
                 syncLog.Message = null;
 
-               await _logService.Save(syncLog);
+                await _logService.Save(syncLog);
 
                 return new DataResult { Success = true, Data = entity };
             }

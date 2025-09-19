@@ -28,11 +28,12 @@ namespace Application.Services.Auth
                 var user = new
                 {
                     username = credentials.User,
-                    password = Crypto.Decrypt(credentials.Password)
+                    //password = Crypto.Decrypt(credentials.Password)
+                    password = credentials.Password
                 };
 
                 var response = await _apiClient.PostAsync<ApiResponse<string>>(
-                    $"{credentials.BaseUrl}/Auth/GetToken",
+                    credentials.AuthUrl,
                     user
                 );
 

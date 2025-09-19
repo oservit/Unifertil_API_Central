@@ -7,7 +7,7 @@ using Domain.Features.Sync.Views;
 
 namespace Service.Features.Sync
 {
-    public class SyncViewRouteUserService : SelectService<SyncViewRouteUser>, ISyncViewRouteUserService
+    public class SyncViewRouteUserService : SelectService<SyncRouteUserView>, ISyncViewRouteUserService
     {
         private readonly ISyncViewRouteUserRepository _viewRepository;
 

@@ -3,9 +3,10 @@ using Application.Features.Clients;
 using Application.Features.Products;
 using Application.Features.Sync.Products;
 using Application.Services.Auth;
-using Application.Services.Sync.Products;
+using Application.Services.Sync;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Common;
+using Service.Features.Sync;
 
 namespace Application.Scope
 {
@@ -22,8 +23,8 @@ namespace Application.Scope
 
             services.AddScoped<IProductAppService, ProductAppService>();
             services.AddScoped<IProductSyncAppService, ProductSyncAppService>();
-            services.AddScoped<IProductSyncRemoteService, ProductSyncRemoteService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ISyncScheduledAppService, SyncScheduledAppService>();
         }
     }
 }
